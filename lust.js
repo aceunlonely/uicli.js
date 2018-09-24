@@ -78,44 +78,62 @@ var solveLustValue = function(value){
  */
 var findLustFromJson = function(json,dotTree){
     if(!json) return null
-    for( var key in json )
-    {
-        // '???': null
-        if(key === "???")
-        {
-            return {
-                isKey : true,
-                object : json,
-                dotTree : (dotTree ? (dotTree + ".???") : "???"),
-                type : null,
-                defaut: null,
-                remark : null
-            }
-        }
-        // name: '???(string)[rue]这里填写你的名字'
-        var value = json[key]
-        // is String
-        if(util.Type.isString(value)){
-            if(util.startWith(value,"???"))
-            {
-                var r = solveLustValue(value)
-                r.isArray = false
-                r['object'] = json
-                r['key'] = key
-                r.dotTree = dotTree ? (dotTree + "." + key) : key;
+    //json must be arry or json
+    if(util.Type.isArray(json)){
+        for(var i=0;i<value.length;i++){
+            var arrayOne = value[i]
+            
+            //todo
+
+            if(util.startWith(arrayOne,"???")){
+                var r= solveLustValue(arrayOne)
+                r.isArray =true
+                r.object = value
+                r.index = i
+                r.dotTree = dotTree ? (dotTree + "." + key + "["+ i + "]") : (key + '[' + i +']')
                 return r
             }
         }
-        // is Array
-        else if(util.Type.isArray(value)){
-            //todo
-        }
-        // is JSON
-        else if(util.Type.isObject(value)){
+    }
+    else if( util.Type.isObject(json)){
+        //util.type.isArray(json)
+        for( var key in json )
+        {
+            // '???': null
+            if(key === "???")
+            {
+                return {
+                    isKey : true,
+                    object : json,
+                    dotTree : (dotTree ? (dotTree + ".???") : "???"),
+                    type : null,
+                    defaut: null,
+                    remark : null
+                }
+            }
+            // name: '???(string)[rue]这里填写你的名字'
+            var value = json[key]
+            // is String
+            if(util.Type.isString(value)){
+                if(util.startWith(value,"???"))
+                {
+                    var r = solveLustValue(value)
+                    r.isArray = false
+                    r['object'] = json
+                    r['key'] = key
+                    r.dotTree = dotTree ? (dotTree + "." + key) : key;
+                    return r
+                }
+            }
+            // is Array
+            else if(util.Type.isArray(value)){
+           }
+            // is JSON
+            else if(util.Type.isObject(value)){
+                return findLustFromJson(value, (dotTree ? (dotTree)))
+            }
 
-        }
-
-        
+        }        
     }
     return null; 
 }
