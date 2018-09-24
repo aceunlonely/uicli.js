@@ -43,4 +43,4 @@ var uiGetJson =function(json){
 }
 
 exports.uiGetJson = uiGetJson;
-exports.findFirstLust = findFirstLust;
+//exports.findFirstLust = findFirstLust;

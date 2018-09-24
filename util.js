@@ -3,7 +3,7 @@ var Type = (function() {
     var typeArr = ['String', 'Object', 'Number', 'Array','Undefined', 'Function', 'Null', 'Symbol'];
     for (var i = 0; i < typeArr.length; i++) {
         (function(name) {
-            type['Is' + name] = function(obj) {
+            type['is' + name] = function(obj) {
                 return Object.prototype.toString.call(obj) == '[object ' + name + ']';
             }
         })(typeArr[i]);

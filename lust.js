@@ -80,19 +80,25 @@ var findLustFromJson = function(json,dotTree){
     if(!json) return null
     //json must be arry or json
     if(util.Type.isArray(json)){
-        for(var i=0;i<value.length;i++){
-            var arrayOne = value[i]
+        for(var i=0;i<json.length;i++){
+            var arrayOne = json[i]
             
-            //todo
-
-            if(util.startWith(arrayOne,"???")){
-                var r= solveLustValue(arrayOne)
-                r.isArray =true
-                r.object = value
-                r.index = i
-                r.dotTree = dotTree ? (dotTree + "." + key + "["+ i + "]") : (key + '[' + i +']')
-                return r
+            if(util.Type.isString(arrayOne))
+            {
+                if(util.startWith(arrayOne,"???")){
+                    var r= solveLustValue(arrayOne)
+                    r.isArray =true
+                    r.object = json
+                    r.index = i
+                    r.dotTree = dotTree ? (dotTree + "["+ i + "]") : ('[' + i +']')
+                    return r
+                }
             }
+            if(util.Type.isObject(arrayOne) || util.Type.isArray(arrayOne)){
+                var r = findLustFromJson(arrayOne,(dotTree ? (dotTree + "["+ i + "]") : ('[' + i +']')))
+                if(r!= null)
+                    return r
+            }      
         }
     }
     else if( util.Type.isObject(json)){
@@ -126,13 +132,11 @@ var findLustFromJson = function(json,dotTree){
                 }
             }
             // is Array
-            else if(util.Type.isArray(value)){
-           }
-            // is JSON
-            else if(util.Type.isObject(value)){
-                return findLustFromJson(value, (dotTree ? (dotTree)))
+            else if(util.Type.isArray(value) || util.Type.isObject(value)){
+                var r = findLustFromJson(value,( dotTree ? (dotTree + "." + key) : key))
+                if(r!= null)
+                    return r
             }
-
         }        
     }
     return null; 
