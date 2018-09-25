@@ -13,12 +13,12 @@ var satifyOneLust = function(lustInfo){
         var cycle = function(){
             stdin.writeLine(lust.getPromptFromLustInfo(lustInfo))
             return stdin.readLine().then(data=>{
-                var cr =lust.checkAndUpdateValueByLustInfo(data)
+                var cr =lust.checkAndUpdateValueByLustInfo(data,lustInfo)
                 if(cr.isPass)
                 {
                     if(!cr.isUpdate){
                         stdin.writeLine("add success:" + lustInfo.dotTree + " continue to add?\r\nyes/no:(no)")         
-                        stdin.writeLine().then(data1=>{ 
+                        stdin.readLine().then(data1=>{ 
                             if(data1 == "true"){
                                 r()
                             }

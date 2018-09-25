@@ -295,6 +295,7 @@ var checkAndUpdateValueByLustInfo= function(value,lustInfo){
             message : ''
         } 
     }
+    console.log(1+ "  " + val)
     lustInfo.object[lustInfo.key] = val
     return {
         isPass : true,

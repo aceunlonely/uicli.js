@@ -37,32 +37,32 @@ function print(){
     //satifyOneLust
 }
 
-//print()
-
-json.name ="LiSA"
-
-//print()
-
-json.age =32
-
-// print()
-
-json.isMan = true
-
- //print()
-json.hobbies[1] = "xxx"
-
 print()
 
-delete json.lover["???"]
+// json.name ="LiSA"
 
-// print()
+// //print()
 
-json.lover.json1 ="sxb"
+// json.age =32
 
-// print()
+// // print()
 
-json.lover.hobbies[1] = "xxxxx"
+// json.isMan = true
+
+//  //print()
+// json.hobbies[1] = "xxx"
+
+// //print()
+
+// delete json.lover["???"]
+
+// // print()
+
+// json.lover.json1 ="sxb"
+
+// // print()
+
+// json.lover.hobbies[1] = "xxxxx"
 
 // print()
 
