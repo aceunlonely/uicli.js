@@ -1,4 +1,5 @@
 var lust = require('../../lust')
+var uicli = require('../../index')
 
 var json= {
     "name" : "???(string)[rue]这里填写你的名字",
@@ -22,57 +23,47 @@ var json= {
     "json3": "???"
 }
 
-// console.log("+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++")
-// console.log(json)
-// console.log("======================")
-// console.log(lust.findLustFromJson(json))
+function print(){
+    console.log("+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++")
+    console.log(json)
+    console.log("======================")
+    console.log(lust.findLustFromJson(json))
+    //console.log("----------------------------")
+    //console.log(lust.getPromptFromLustInfo(lust.findLustFromJson(json)))
+    uicli.satifyOneLust(lust.findLustFromJson(json)).then(()=>{
+        console.log("#####################################")
+        console.log(json)
+    })
+    //satifyOneLust
+}
+
+//print()
 
 json.name ="LiSA"
 
-// console.log("+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++")
-// console.log(json)
-// console.log("======================")
-// console.log(lust.findLustFromJson(json))
+//print()
 
 json.age =32
 
-// console.log("+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++")
-// console.log(json)
-// console.log("======================")
-// console.log(lust.findLustFromJson(json))
+// print()
 
 json.isMan = true
 
-// console.log("+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++")
-// console.log(json)
-// console.log("======================")
-// console.log(lust.findLustFromJson(json))
+ //print()
 json.hobbies[1] = "xxx"
 
-// console.log("+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++")
-// console.log(json)
-// console.log("======================")
-// console.log(lust.findLustFromJson(json))
+print()
 
 delete json.lover["???"]
 
-// console.log("+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++")
-// console.log(json)
-// console.log("======================")
-// console.log(lust.findLustFromJson(json))
+// print()
 
 json.lover.json1 ="sxb"
 
-// console.log("+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++")
-// console.log(json)
-// console.log("======================")
-// console.log(lust.findLustFromJson(json))
+// print()
 
 json.lover.hobbies[1] = "xxxxx"
 
-console.log("+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++")
-console.log(json)
-console.log("======================")
-console.log(lust.findLustFromJson(json))
+// print()
 
 // and so on 

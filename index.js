@@ -1,10 +1,55 @@
-
+var stdin = require('stdin.js')
+var lust = require('./lust')
+var util = require('./util')
 
 global.uicliRunCount =0;
 
+/**
+ * satify one lust
+ * @param {*} lustInfo 
+ */
+var satifyOneLust = function(lustInfo){
+    return new Promise(function(r,j){
+        var cycle = function(){
+            stdin.writeLine(lust.getPromptFromLustInfo(lustInfo))
+            return stdin.readLine().then(data=>{
+                var cr =lust.checkAndUpdateValueByLustInfo(data)
+                if(cr.isPass)
+                {
+                    if(!cr.isUpdate){
+                        stdin.writeLine("add success:" + lustInfo.dotTree + " continue to add?\r\nyes/no:(no)")         
+                        stdin.writeLine().then(data1=>{ 
+                            if(data1 == "true"){
+                                r()
+                            }
+                            else{
+                                if(lustInfo.isArray){
+                                    lustInfo.fJson[lustInfo.fkey] = lustInfo.object.splice(lustInfo.index+1,1) 
+                                }
+                                else if(lustInfo.isKey){
+                                    delete lustInfo.object[lustInfo.key]
+                                }
+                                r()
+                            }
+                        })
+                        
+                    }
+                    else
+                    {
+                        r()
+                    }
+                }
+                else
+                {
+                    stdin.writeLine(cr.message)
+                    cycle()
+                }
+            })
+        }
 
-
-
+        cycle()
+    })
+}
 
 /**
  * 通过ui交互方式获取realJson
@@ -12,35 +57,35 @@ global.uicliRunCount =0;
  */
 var uiGetJson =function(json){
     if(global.uicliRunCount++ > 0){
-        return new Promise(function(){console.log("uicli: running uicli can be only one @ any time")});
+        throw Error("uicli: one more uicli runed @ same time")
     }
-    process.stdin.setEncoding('utf8');
-    process.stdin.on('end', () => {
-        process.stdout.write('end');
-        global.uicliRunCount =0;
-        process.stdin.pause()
-    });
     //deep copy json
-    var resultJson = JSON.parse(JSON.stringify(json))
-    //resume
-    process.stdin.resume();
-    return new Promise(function(resolve,reject){
-        //find lust
+    var tgtJson = JSON.parse(JSON.stringify(json))
+    return new Promise(function(r,j){
+        /*
+        { isKey: false,
+  type: 'String',
+  defaut: null,
+  remark: '',
+  isArray: true,
+  object: [ '???(string)', { love: '???(s)', like: [Object] } ],
+  index: 0,
+  dotTree: 'lover.hobbies[2][0]' }
 
+        */
+        var firstLustInfo = lust.findLustFromJson(tgtJson)
+        if(firstLustInfo){
+            
 
-
-        process.stdin.on('data', (data) => {
-            var chunk = data//process.stdin.read();
-            if (chunk !== null) {
-              process.stdout.write(`data: ${chunk}`);
-            }
-            resolve()
-            process.stdin.emit('end');
-          });
+            
+        }
+        else{
+            r(tgtJson)
+        }
 
     });
-
 }
 
 exports.uiGetJson = uiGetJson;
+exports.satifyOneLust= satifyOneLust;
 //exports.findFirstLust = findFirstLust;
