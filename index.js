@@ -19,12 +19,15 @@ var satifyOneLust = function(lustInfo){
                     if(!cr.isUpdate){
                         stdin.writeLine("add success:" + lustInfo.dotTree + " continue to add?\r\nyes/no:(no)")         
                         stdin.readLine().then(data1=>{ 
-                            if(data1 == "true"){
+                            if(data1 == "true" || data1 == "yes" || data1 == "y" || data1=="Y"
+                                || data1 == "t"){
+                                // if continue ,will keep ???
                                 r()
                             }
                             else{
                                 if(lustInfo.isArray){
-                                    lustInfo.fJson[lustInfo.fkey] = lustInfo.object.splice(lustInfo.index+1,1) 
+                                    //lustInfo.fJson[lustInfo.fkey] = 
+                                    lustInfo.object.splice(lustInfo.index+1,1) 
                                 }
                                 else if(lustInfo.isKey){
                                     delete lustInfo.object[lustInfo.key]

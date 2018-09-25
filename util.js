@@ -20,7 +20,7 @@ var endWith=function(str,s){
        return false;
    }
 var startWith=function(str,s){
-    if(s==null||s==""||str.length==0||s.length>str.length)
+    if(s==null||s==""|| str==null || str==""||str.length==0||s.length>str.length)
        return false;
     if(str.substr(0,s.length)==s)
        return true;

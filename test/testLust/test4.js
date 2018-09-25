@@ -37,19 +37,19 @@ function print(){
     //satifyOneLust
 }
 
+//print()
+
+json.name ="LiSA"
+
+//print()
+
+json.age =32
+
+//print()
+
+json.isMan = true
+
 print()
-
-// json.name ="LiSA"
-
-// //print()
-
-// json.age =32
-
-// // print()
-
-// json.isMan = true
-
-//  //print()
 // json.hobbies[1] = "xxx"
 
 // //print()

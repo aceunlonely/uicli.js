@@ -288,7 +288,8 @@ var checkAndUpdateValueByLustInfo= function(value,lustInfo){
     }
     if(lustInfo.isArray)
     {
-        lustInfo.object.insert(lustInfo.index , val)
+        //lustInfo.fJson[lustInfo.fKey]= 
+        lustInfo.object.splice(lustInfo.index,0 , val)
         return {
             isPass : true,
             isUpdate: false,
