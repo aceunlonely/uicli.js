@@ -41,7 +41,7 @@ var satifyOneLust = function(lustInfo){
                 }
                 else
                 {
-                    stdin.writeLine(cr.message)
+                    stdin.writeLine(cr.message + "\r\n")
                     cycle()
                 }
             })

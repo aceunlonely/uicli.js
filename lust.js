@@ -44,7 +44,7 @@ var solveLustValue = function(value){
             case 'b':
             case 'boolean':
             case 'bool':
-                tyep ="Boolean"
+                type ="Boolean"
                 break;
             case 'null':
                 type ="Null"
@@ -204,7 +204,7 @@ var checkAndUpdateValueByLustInfo= function(value,lustInfo){
             case 'b':
             case 'boolean':
             case 'bool':
-                tyep ="Boolean"
+                type ="Boolean"
                 break;
             case 'null':
                 type ="Null"
@@ -295,7 +295,7 @@ var checkAndUpdateValueByLustInfo= function(value,lustInfo){
             message : ''
         } 
     }
-    console.log(1+ "  " + val)
+    //console.log(1+ "  " + val)
     lustInfo.object[lustInfo.key] = val
     return {
         isPass : true,
