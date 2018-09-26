@@ -1,3 +1,4 @@
 {
-    "verbose" : false
+    "verbose" : false,
+    "lang" : "en"
 }

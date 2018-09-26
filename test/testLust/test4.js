@@ -49,21 +49,21 @@ json.age =32
 
 json.isMan = true
 
-print()
-// json.hobbies[1] = "xxx"
+//print()
+ json.hobbies[1] = "xxx"
 
-// //print()
+//print()
 
-// delete json.lover["???"]
-
-// // print()
-
-// json.lover.json1 ="sxb"
-
-// // print()
-
-// json.lover.hobbies[1] = "xxxxx"
+delete json.lover["???"]
 
 // print()
+
+ json.lover.json1 ="sxb"
+
+ //print()
+
+ json.lover.hobbies[1] = "xxxxx"
+
+ print()
 
 // and so on 

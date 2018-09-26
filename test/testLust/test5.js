@@ -1,31 +1,4 @@
-# uicli.js
-uicli tool for json....,implement for node
-
-## install
-* npm i uicli -g
-
-## try it 
-//todo
-
-## cli
-
-## use @ npm
-```javascript
-var uicli = require('uicli')
-
-var json = {
-    "name" : "???(string)[rue]这里填写你的名字",
-    "age" : "???"
-}
-
-uicli.uiGetJson(json).then(data =>{
-    console.log("hello good day")
-})
-
-```
-or complex @
-```javascript
-var uicli = require('uicli')
+var uicli = require('../../')
 
 var json= {
     "name" : "???(string)[rue]这里填写你的名字",
@@ -49,17 +22,11 @@ var json= {
     "json3": "???"
 }
 
+var json = {
+    "name" : "???(string)[rue]这里填写你的名字",
+    "age" : "???"
+}
+
 uicli.uiGetJson(json).then(data =>{
     console.log("hello good day")
 })
-
-```
-
-## switch info lang
-    //todo
-    set env: uicli_lang = en
-    or
-    set env: uicli_lang = cn
-
-    or lang @ config.json 
-

@@ -17,7 +17,7 @@ var satifyOneLust = function(lustInfo){
                 if(cr.isPass)
                 {
                     if(!cr.isUpdate){
-                        stdin.writeLine("add success:" + lustInfo.dotTree + " continue to add?\r\nyes/no:(no)")         
+                        stdin.writeLine("add success:" + lustInfo.dotTree + " continue to add?\r\nyes/no:(no) ")         
                         stdin.readLine().then(data1=>{ 
                             if(data1 == "true" || data1 == "yes" || data1 == "y" || data1=="Y"
                                 || data1 == "t"){
@@ -25,12 +25,13 @@ var satifyOneLust = function(lustInfo){
                                 r()
                             }
                             else{
+                                //console.log(lustInfo)
                                 if(lustInfo.isArray){
                                     //lustInfo.fJson[lustInfo.fkey] = 
                                     lustInfo.object.splice(lustInfo.index+1,1) 
                                 }
                                 else if(lustInfo.isKey){
-                                    delete lustInfo.object[lustInfo.key]
+                                    delete lustInfo.object["???"]
                                 }
                                 r()
                             }
@@ -76,15 +77,28 @@ var uiGetJson =function(json){
   dotTree: 'lover.hobbies[2][0]' }
 
         */
-        var firstLustInfo = lust.findLustFromJson(tgtJson)
-        if(firstLustInfo){
-            
-
-            
+        function cylceAllLust(){
+            var firstLustInfo = lust.findLustFromJson(tgtJson)
+            if(firstLustInfo){
+                satifyOneLust(firstLustInfo).then(cylceAllLust)
+            }
+            else{
+                stdin.writeLine("======================================================================\r\n")
+                console.log(tgtJson)
+                stdin.writeLine("remake the json ?\r\nyes/no:(no) ")
+                stdin.readLine().then(data2=>{ 
+                    if(data2 == "true" || data2 == "yes" || data2 == "y" || data2=="Y"|| data2 == "t"){
+                        tgtJson = JSON.parse(JSON.stringify(json))
+                        cylceAllLust()
+                    }
+                    else
+                    {
+                        r(tgtJson)
+                    }
+                })
+            }
         }
-        else{
-            r(tgtJson)
-        }
+        cylceAllLust()
 
     });
 }
