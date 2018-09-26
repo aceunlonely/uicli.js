@@ -5,9 +5,9 @@ uicli tool for json....,implement for node
 * npm i uicli -g
 
 ## try it 
-//todo
+npm i uicli -g
+uicli
 
-## cli
 
 ## use @ npm
 ```javascript
