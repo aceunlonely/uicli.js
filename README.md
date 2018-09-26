@@ -2,16 +2,16 @@
 uicli tool for json....,implement for node
 
 ## install
-* npm i uicli -g
+* npm i uicli.js -g
 
 ## try it 
-npm i uicli -g
+npm i uicli.js -g
 uicli
 
 
 ## use @ npm
 ```javascript
-var uicli = require('uicli')
+var uicli = require('uicli.js')
 
 var json = {
     "name" : "???(string)[rue]这里填写你的名字",
@@ -25,7 +25,7 @@ uicli.uiGetJson(json).then(data =>{
 ```
 or complex @
 ```javascript
-var uicli = require('uicli')
+var uicli = require('uicli.js')
 
 var json= {
     "name" : "???(string)[rue]这里填写你的名字",
