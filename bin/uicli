@@ -1,2 +1,25 @@
 #!/usr/bin/env node
 
+var uicli = require('../')
+
+var json= {
+    "name" : "???(string)[rue]这里填写你的名字",
+    "age" : "???",
+    "isMan" : "???是否是男生",
+    "hobbies": ["basketball","???"],
+    "lover" : {
+        "name" : "LiSA",
+        "age" : 32,
+        "???" : null,
+        "json1":"???"
+    },
+    "???": null,
+    "json3": "???"
+}
+console.log("json:")
+console.log(json)
+console.log("===============================================")
+console.log("then run uiGetJson")
+uicli.uiGetJson(json).then(data =>{
+    console.log("hello good day")
+})
