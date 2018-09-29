@@ -148,7 +148,7 @@ var findLustFromJson = function(json,dotTree,fJson,fKey){
 }
 
 
-var getPromptFromLustInfo= function(lustInfo){
+var getPromptFromLustInfo= function(lustInfo,lastData){
     /*
 { isKey: false,
   type: 'String',
@@ -179,7 +179,7 @@ var getPromptFromLustInfo= function(lustInfo){
     //name : (rue)
 }
 
-var checkAndUpdateValueByLustInfo= function(value,lustInfo){
+var checkAndUpdateValueByLustInfo= function(value,lustInfo,lastData){
     var val = value || lustInfo.defaut
     // type priority 1.(String)value 2. lustInfo.type 3. guess
     var type = lustInfo.type

@@ -10,10 +10,10 @@ global.uicliRunCount =0;
  */
 var satifyOneLust = function(lustInfo){
     return new Promise(function(r,j){
-        var cycle = function(){
-            stdin.writeLine(lust.getPromptFromLustInfo(lustInfo))
+        var cycle = function(lastData){
+            stdin.writeLine(lust.getPromptFromLustInfo(lustInfo,lastData))
             return stdin.readLine().then(data=>{
-                var cr =lust.checkAndUpdateValueByLustInfo(data,lustInfo)
+                var cr =lust.checkAndUpdateValueByLustInfo(data,lustInfo,lastData)
                 if(cr.isPass)
                 {
                     if(!cr.isUpdate){
@@ -46,7 +46,7 @@ var satifyOneLust = function(lustInfo){
                 else
                 {
                     stdin.writeLine(cr.message + "\r\n")
-                    cycle()
+                    cycle(data)
                 }
             })
         }
