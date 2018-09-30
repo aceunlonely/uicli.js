@@ -6,6 +6,71 @@ var config = require('peeriocjs').module("uicli").invoke("config").sync.config()
 var util =require('./util')
 
 /**
+ * render select lustInfo
+ * @param {*} lustInfo 
+ */
+var renderSelect = function(lustInfo){
+    // "selectKeys" : [],     abbc,sfdf
+    // "selectValues" : [],  asd,asdf
+    if(lustInfo.selectKeys){
+        if( util.Type.isString(lustInfo.selectKeys)){
+            lustInfo.selectKeys= lustInfo.selectKeys.split(",")
+        }
+        if( util.Type.isString(lustInfo.selectValues)){
+            lustInfo.selectValues= lustInfo.selectValues.split(",")
+        }
+        if(util.Type.isArray(lustInfo.selectKeys) && lustInfo.selectKeys.length >0 ){
+            //"getRightValue" : function(input,lustInfo,type){ return input + "_real"},
+            if(config.verbose && lustInfo.getRightValue){
+                console.log("uicli: lustInfo.getRightValue is override because of selectKeys :" + lustInfo.dotTree)
+            }
+            lustInfo.getRightValue = function(input,lustInfo,type){
+                if(!isNaN(input)){
+                    var i = parseInt(input) -1
+                    if(i>=0 && i< lustInfo.selectKeys.length)
+                    {
+                        return lustInfo.selectKeys[i]
+                    }
+                }
+                var index = lustInfo.selectKeys.indexOf(input)
+                if(index >-1)
+                    return lustInfo.selectKeys[index]
+                if(lustInfo.selectValues){
+                    index=lustInfo.selectValues.indexOf(input)
+                    if(index >-1 && index< lustInfo.selectKeys.length)
+                    {
+                        return lustInfo.selectKeys[index]
+                    }
+                }
+                return null;
+            }
+            if(config.verbose && lustInfo.prompt){
+                console.log("uicli: lustInfo.prompt is override because of selectKeys :" + lustInfo.dotTree)
+            }
+            //prompt
+            //"prompt" : function(lustInfo,lastData){},
+            lustInfo.prompt = function(lustInfo,lastData){
+                if(!lustInfo.selectKeys)   return ""
+                var p = "";
+                for(var i =0;i<lustInfo.selectKeys;i++)
+                {
+                    var v = lustInfo.selectKeys[i]
+                    if(lustInfo.selectValues && i < lustInfo.selectValues.length){
+                        v= lustInfo.selectValues[i]
+                    }
+                    p += "["+(i+1)+"] " + v + " "
+                }
+                if(p.length>0)
+                    return p +"\r\n";
+                return p;
+            }
+
+
+        }
+    }
+}
+
+/**
  * solve lustValue
  * @param {string} value 
  */
@@ -227,10 +292,10 @@ var getPromptFromLustInfo= function(lustInfo,lastData){
             info =""
         }
     }
-    return info +"pliz input " + lustInfo.dotTree + (lustInfo.type ? (" :"+lustInfo.type) : "")
-        +(lustInfo.remark ? (" " + lustInfo.remark) : "") + "\r\n" + lustInfo.dotTree + " : " 
+    return  "pliz input " + lustInfo.dotTree + (lustInfo.type ? (" :"+lustInfo.type) : "")
+        +(lustInfo.remark ? (" " + lustInfo.remark) : "") +  (lustInfo.regExp ? " " + lustInfo.regExp : "") + "\r\n" + info + lustInfo.dotTree + " : " 
         +(lustInfo.defaut ? ("("+lustInfo.defaut+") "):"");
-    //pliz input name: string 这里填写你的名字
+    //pliz input name: string 这里填写你的名字  /acv/g
     //name : (rue)
 }
 
