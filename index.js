@@ -97,6 +97,7 @@ var uiGetJson =function(json){
         */
         function cylceAllLust(){
             var firstLustInfo = lust.findLustFromJson(tgtJson)
+            lust.renderSelect(firstLustInfo)
             if(firstLustInfo){
                 satifyOneLust(firstLustInfo).then(cylceAllLust)
             }

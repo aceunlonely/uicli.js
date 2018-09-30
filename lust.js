@@ -52,7 +52,7 @@ var renderSelect = function(lustInfo){
             lustInfo.prompt = function(lustInfo,lastData){
                 if(!lustInfo.selectKeys)   return ""
                 var p = "";
-                for(var i =0;i<lustInfo.selectKeys;i++)
+                for(var i =0;i<lustInfo.selectKeys.length;i++)
                 {
                     var v = lustInfo.selectKeys[i]
                     if(lustInfo.selectValues && i < lustInfo.selectValues.length){
@@ -632,3 +632,5 @@ exports.solveLustValue= solveLustValue
 exports.getPromptFromLustInfo = getPromptFromLustInfo
 exports.checkAndUpdateValueByLustInfo = checkAndUpdateValueByLustInfo
 exports.atuoCheckAndUpdateValueByLustInfo  =atuoCheckAndUpdateValueByLustInfo
+
+exports.renderSelect = renderSelect
