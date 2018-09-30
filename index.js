@@ -31,7 +31,7 @@ var satifyOneLust = function(lustInfo){
                                     lustInfo.object.splice(lustInfo.index+1,1) 
                                 }
                                 else if(lustInfo.isKey){
-                                    delete lustInfo.object["???"]
+                                    delete lustInfo.object[lustInfo.key]
                                 }
                                 r()
                             }

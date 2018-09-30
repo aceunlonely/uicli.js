@@ -96,6 +96,7 @@ var findLustFromJson = function(json,dotTree,fJson,fKey){
                     r.dotTree = dotTree ? (dotTree + "["+ i + "]") : ('[' + i +']'),
                     r.fJson = fJson
                     r.fKey = fKey
+                    r.key = null
                     return r
                 }
             }
@@ -109,6 +110,7 @@ var findLustFromJson = function(json,dotTree,fJson,fKey){
                     r.dotTree = dotTree ? (dotTree + "["+ i + "]") : ('[' + i +']'),
                     r.fJson = fJson
                     r.fKey = fKey
+                    r.key = null
                     return r
                 }
                     
@@ -135,11 +137,13 @@ var findLustFromJson = function(json,dotTree,fJson,fKey){
                 if(value && value.isLust && value.isKey){
                     var r = value
                     r.object = json
+                    r.key = key
                     r.dotTree =  (dotTree ? (dotTree + ".???") : "???")
                     return r;
                 }
                 return {
                     isKey : true,
+                    key : key,
                     object : json,
                     dotTree : (dotTree ? (dotTree + ".???") : "???"),
                     type : null,
@@ -390,7 +394,7 @@ var atuoCheckAndUpdateValueByLustInfo = function(value,lustInfo){
     }
     // special for isKey
     if(lustInfo.isKey){
-        delete lustInfo.object["???"]
+        delete lustInfo.object[lustInfo.key]
         return
     }
     if(type)
