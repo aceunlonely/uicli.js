@@ -271,6 +271,29 @@ var checkAndUpdateValueByLustInfo= function(value,lustInfo,lastData){
     {
         val = lustInfo.getRightValue(val,lustInfo,type) || val
     }
+    //check RegExp
+    if(lustInfo.regExp){
+        if(util.Type.isObject(lustInfo.regExp))
+        {
+            if(!lustInfo.regExp.test(val))
+            {
+                return {
+                    isPass : false,
+                    isUpdate: false,
+                    message : "正则匹配失败"
+                } 
+            }
+        }
+        else if(util.Type.isString(lustInfo.regExp)){
+            if(!new RegExp(lustInfo.regExp).test(val)){
+                return {
+                    isPass : false,
+                    isUpdate: false,
+                    message : "正则匹配失败"
+                } 
+            }
+        }
+    }
     // special for isKey
     if(lustInfo.isKey){
 
