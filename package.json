@@ -23,7 +23,7 @@
   },
   "homepage": "https://github.com/aceunlonely/uicli.js#readme",
   "dependencies": {
-    "peeriocjs": "^2.4.0",
+    "peeriocjs": "^2.4.1",
     "stdin.js": "^1.1.0"
   },
   "bin": {

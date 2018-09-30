@@ -56,6 +56,24 @@ var satifyOneLust = function(lustInfo){
 }
 
 /**
+ * 获取默认值
+ * @param {*} json 
+ */
+var getDefaultJson = function(json){
+     //deep copy json
+     var tgtJson = JSON.parse(JSON.stringify(json))
+     function cylceAllLust(){
+        var firstLustInfo = lust.findLustFromJson(tgtJson)
+        if(firstLustInfo){
+            lust.atuoCheckAndUpdateValueByLustInfo("",firstLustInfo)
+            cylceAllLust()
+        }
+    }
+    cylceAllLust()
+    return tgtJson
+}
+
+/**
  * 通过ui交互方式获取realJson
  * @param {json} json 
  */
@@ -103,6 +121,15 @@ var uiGetJson =function(json){
     });
 }
 
+/**
+ *  get Json  by ui
+ */
 exports.uiGetJson = uiGetJson;
+
+/**
+ * get default json 
+ */
+exports.getDefaultJson = getDefaultJson;
+
 exports.satifyOneLust= satifyOneLust;
 //exports.findFirstLust = findFirstLust;

@@ -305,8 +305,102 @@ var checkAndUpdateValueByLustInfo= function(value,lustInfo,lastData){
     } 
 }
 
+var atuoCheckAndUpdateValueByLustInfo = function(value,lustInfo){
+    var val = value || lustInfo.defaut
+    // type priority 1.(String)value 2. lustInfo.type 3. guess
+    var type = lustInfo.type
+    if(util.startWith(val,"(") && val.indexOf(")"))
+    {
+        var typeValue = val.substr(1,val.indexOf(")")-1)
+        var val = val.substring(val.indexOf(')')+1)
+        switch(typeValue.toLowerCase()){
+            case 's':
+            case 'string':
+                type ="String";
+                break
+            case 'json':
+            case 'j':
+                type ="JSON"
+                break
+            case 'number':
+            case 'num':
+            case 'n':
+                type ="Number";
+                break
+            case 'b':
+            case 'boolean':
+            case 'bool':
+                type ="Boolean"
+                break;
+            case 'null':
+                type ="Null"
+                break
+            }
+    }
+    // special for isKey
+    if(lustInfo.isKey){
+        delete lustInfo.object["???"]
+        return
+    }
+    if(type)
+    {
+        switch(type){
+            case 'JSON':
+                try{
+                    val = JSON.parse(val)
+                }
+                catch(ex){
+                    val = null
+                }
+                break
+            case 'Number':
+                if(isNaN(val))
+                {
+                    val= null
+                }
+                val = parseFloat(val)
+                break
+            case 'Boolean':
+                if(val.toLowerCase() == "true" || val.toLowerCase() == "t" || val=="1"){
+                    val= true
+                }
+                else
+                {
+                    val= false
+                }
+                break;
+            case 'Null':
+                val = null
+                break
+            }   
+    }
+    else{
+        //guess
+        if(!val || val =="null"){
+            val = null
+        }else if( val == "true"){
+            val = true
+        }else if(val == "false"){
+            val = false
+        }else if(!isNaN(val)){
+            val = parseFloat(val)
+        }
+    }
+    if(lustInfo.isArray)
+    {
+        //lustInfo.fJson[lustInfo.fKey]= 
+        lustInfo.object[lustInfo.index] = null
+    }
+    else
+    {
+        //console.log(1+ "  " + val)
+        lustInfo.object[lustInfo.key] = val
+    }
+}
+
 
 exports.findLustFromJson = findLustFromJson
 exports.solveLustValue= solveLustValue
 exports.getPromptFromLustInfo = getPromptFromLustInfo
 exports.checkAndUpdateValueByLustInfo = checkAndUpdateValueByLustInfo
+exports.atuoCheckAndUpdateValueByLustInfo  =atuoCheckAndUpdateValueByLustInfo
