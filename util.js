@@ -1,6 +1,6 @@
 var Type = (function() {
     var type = {};
-    var typeArr = ['String', 'Object', 'Number', 'Array','Undefined', 'Function', 'Null', 'Symbol'];
+    var typeArr = ['String', 'Object', 'Number', 'Array','Undefined', 'Function', 'Null', 'Symbol','Boolean'];
     for (var i = 0; i < typeArr.length; i++) {
         (function(name) {
             type['is' + name] = function(obj) {

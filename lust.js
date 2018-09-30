@@ -266,8 +266,43 @@ var checkAndUpdateValueByLustInfo= function(value,lustInfo,lastData){
                 break
             }
     }
+    //"getRightValue" : function(input,lustInfo,type){ return input + "_real"},
+    if(lustInfo.getRightValue && util.isFunction(lustInfo.getRightValue))
+    {
+        val = lustInfo.getRightValue(val,lustInfo,type) || val
+    }
     // special for isKey
     if(lustInfo.isKey){
+
+        // check function
+        //"check" : function(lustInfo,data,type){ return {isPass : true , message : "" }},
+        if(lustInfo.check && util.isFunction(lustInfo.check)){
+            var result = lustInfo.check(lustInfo,val,"String");
+            if(result){
+                if(util.Type.isBoolean(result) && !result)
+                {
+                    return {
+                        isPass : false,
+                        isUpdate : false,
+                        message : ""
+                    }
+                }
+                if(util.Type.isString(result)){
+                    return {
+                        isPass : false,
+                        isUpdate : false,
+                        message : result
+                    }
+                }
+                else if(util.Type.isObject(result) && !result.isPass){
+                    return {
+                        isPass : false,
+                        isUpdate : false,
+                        message : result.message || result.msg || ""
+                    }
+                }
+            }
+        }
         if(!val){
             return {
                 isPass : false,
@@ -277,6 +312,15 @@ var checkAndUpdateValueByLustInfo= function(value,lustInfo,lastData){
         }
         if(type && type !="String" && config.verbose){
             console.log(lustInfo.dotTree +" doesnt have a type-suit value :" + value )
+        }
+        // keep lust
+        if(lustInfo.object[val] && lustInfo.object[val].isLust && lustInfo.object[val].isKey ==false)
+        {
+            return {
+                isPass : true,
+                isUpdate: false,
+                message : ""
+            }  
         }
         if(lustInfo.object[val] && config.verbose){
             console.log(lustInfo.dotTree +" has already exits :" + value + ",now override it")
@@ -341,6 +385,42 @@ var checkAndUpdateValueByLustInfo= function(value,lustInfo,lastData){
             val = parseFloat(val)
         }
     }
+     // check function
+    //"check" : function(lustInfo,data,type){ return {isPass : true , message : "" }},
+    if(lustInfo.check && util.isFunction(lustInfo.check)){
+        var result = lustInfo.check(lustInfo,val,type);
+        if(result){
+            if(util.Type.isBoolean(result) && !result)
+            {
+                return {
+                    isPass : false,
+                    isUpdate : false,
+                    message : ""
+                }
+            }
+            if(util.Type.isString(result)){
+                return {
+                    isPass : false,
+                    isUpdate : false,
+                    message : result
+                }
+            }
+            else if(util.Type.isObject(result) && !result.isPass){
+                return {
+                    isPass : false,
+                    isUpdate : false,
+                    message : result.message || result.msg || ""
+                }
+            }
+        }
+    }
+    //onCheckRight
+    //"onCheckRight" : function(data,lustInfo){ console.log("check right :" + data)}
+    if(lustInfo.onCheckRight && util.Type.isFunction(lustInfo.onCheckRight))
+    {
+        lustInfo.onCheckRight(val,lustInfo)
+    }
+    // update
     if(lustInfo.isArray)
     {
         //lustInfo.fJson[lustInfo.fKey]= 
