@@ -72,11 +72,49 @@ var selectjson= {
     "json3": "???"
 }
 
-uicli.uiGetJson(selectjson).then(data=>{ console.log("+++++++++++++++++++++++++++++++++++++")
-    console.log(data)
-})
+// uicli.uiGetJson(selectjson).then(data=>{ console.log("+++++++++++++++++++++++++++++++++++++")
+//     console.log(data)
+// })
 
 //test check
 //test regExp
+//test select
+
+
+var regExpjson= {
+    "loveName" : {
+        "isLust" : true,
+        "isKey" : false,
+        "prompt" : function(lustInfo,lastData){},
+        "check" : null,
+        "regExp" : /^((20|21|22|23|[0-1]\d)\:[0-5][0-9])(\:[0-5][0-9])?$/,
+        "selectKeys" : null,
+        "selectValues" : null,
+        "type" : "s",
+        "default" : "23:10:15",
+        "remark" : "请输入hh:mm:ss",
+        "getRightValue" : null,
+        "onCheckRight" : function(data,lustInfo){ console.log("check right :" + data)}
+    },
+    "level" :  {
+        "isLust" : true,
+        "isKey" : false,
+        "prompt" : function(lustInfo,lastData){},
+        "check" : null,
+        "regExp" : '^\\d{1}$',
+        "selectKeys" : null,
+        "selectValues" : null,
+        "type" : "n",
+        "default" : "1",
+        "remark" : "请输入一位数字",
+        "getRightValue" : null,
+        "onCheckRight" : function(data,lustInfo){ console.log("check right :" + data)}
+    }
+}
+
+uicli.uiGetJson(regExpjson).then(data=>{ console.log("+++++++++++++++++++++++++++++++++++++")
+    console.log(data)
+})
+
 //test getRightValue
 //test prompt
