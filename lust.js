@@ -64,8 +64,18 @@ var renderSelect = function(lustInfo){
                     return p +"\r\n";
                 return p;
             }
-
-
+            //check
+            //function(lustInfo,data,type){ return {isPass : true ,isUpdate : false, message : "" }},
+            if(config.verbose && lustInfo.check){
+                console.log("uicli: lustInfo.check is override because of selectKeys :" + lustInfo.dotTree)
+            }
+            lustInfo.check =function(lustInfo,data,type){ 
+                if(!data)
+                    return {isPass : false, message :" pliz select one value"}
+                if(lustInfo.selectKeys.indexOf(data)>-1)
+                    return {isPass : true ,isUpdate : false, message : "" }
+                return {isPass : false, message :" pliz select a right value"}
+            }
         }
     }
 }
@@ -81,7 +91,7 @@ var solveLustValue = function(value){
         return {
             isKey : false,
             type : null,
-            defaut: null,
+            default: null,
             remark : null
         }
     }
@@ -103,12 +113,15 @@ var solveLustValue = function(value){
                 break
             case 'number':
             case 'num':
+            case 'nu':
             case 'n':
+            case 'no':
                 type ="Number";
                 break
             case 'b':
             case 'boolean':
             case 'bool':
+            case 'bln':
                 type ="Boolean"
                 break;
             case 'null':
@@ -134,7 +147,7 @@ var solveLustValue = function(value){
         return {
             isKey : false,
             type : type,
-            defaut: defalutValue,
+            default: defalutValue,
             remark : anno 
         }
 }
@@ -212,7 +225,7 @@ var findLustFromJson = function(json,dotTree,fJson,fKey){
                     object : json,
                     dotTree : (dotTree ? (dotTree + ".???") : "???"),
                     type : null,
-                    defaut: null,
+                    default: null,
                     remark : null
                 }
             }
@@ -259,7 +272,7 @@ var getPromptFromLustInfo= function(lustInfo,lastData){
     /*
 { isKey: false,
   type: 'String',
-  defaut: 'rue',
+  default: 'rue',
   remark: '这里填写你的名字',
   isArray: false,
   object:
@@ -294,13 +307,13 @@ var getPromptFromLustInfo= function(lustInfo,lastData){
     }
     return  "pliz input " + lustInfo.dotTree + (lustInfo.type ? (" :"+lustInfo.type) : "")
         +(lustInfo.remark ? (" " + lustInfo.remark) : "") +  (lustInfo.regExp ? " " + lustInfo.regExp : "") + "\r\n" + info + lustInfo.dotTree + " : " 
-        +(lustInfo.defaut ? ("("+lustInfo.defaut+") "):"");
+        +(lustInfo.default ? ("("+lustInfo.default+") "):"");
     //pliz input name: string 这里填写你的名字  /acv/g
     //name : (rue)
 }
 
 var checkAndUpdateValueByLustInfo= function(value,lustInfo,lastData){
-    var val = value || lustInfo.defaut
+    var val = value || lustInfo.default
     // type priority 1.(String)value 2. lustInfo.type 3. guess
     var type = lustInfo.type
     if(util.startWith(val,"(") && val.indexOf(")"))
@@ -318,12 +331,15 @@ var checkAndUpdateValueByLustInfo= function(value,lustInfo,lastData){
                 break
             case 'number':
             case 'num':
+            case 'nu':
+            case 'no':
             case 'n':
                 type ="Number";
                 break
             case 'b':
             case 'boolean':
             case 'bool':
+            case 'bln':
                 type ="Boolean"
                 break;
             case 'null':
@@ -332,14 +348,15 @@ var checkAndUpdateValueByLustInfo= function(value,lustInfo,lastData){
             }
     }
     //"getRightValue" : function(input,lustInfo,type){ return input + "_real"},
-    if(lustInfo.getRightValue && util.isFunction(lustInfo.getRightValue))
+    if(lustInfo.getRightValue && util.Type.isFunction(lustInfo.getRightValue))
     {
         val = lustInfo.getRightValue(val,lustInfo,type) || val
     }
     //check RegExp
     if(lustInfo.regExp){
-        if(util.Type.isObject(lustInfo.regExp))
+        if(util.Type.isRegExp(lustInfo.regExp))
         {
+
             if(!lustInfo.regExp.test(val))
             {
                 return {
@@ -421,10 +438,12 @@ var checkAndUpdateValueByLustInfo= function(value,lustInfo,lastData){
             message : ""
         }     
     }
+    console.log(type)
     if(type)
     {
-        switch(type){
-            case 'JSON':
+        switch(type.toLowerCase()){
+            case 'j':
+            case 'json':
                 try{
                     val = JSON.parse(val)
                 }
@@ -436,7 +455,11 @@ var checkAndUpdateValueByLustInfo= function(value,lustInfo,lastData){
                     } 
                 }
                 break
-            case 'Number':
+            case 'number':
+            case 'num':
+            case 'no':
+            case 'nu':
+            case 'n':
                 if(isNaN(val))
                 {
                     return {
@@ -447,7 +470,10 @@ var checkAndUpdateValueByLustInfo= function(value,lustInfo,lastData){
                 }
                 val = parseFloat(val)
                 break
-            case 'Boolean':
+            case 'boolean':
+            case 'b':
+            case 'bool':
+            case 'bln':
                 if(val.toLowerCase() == "true" || val.toLowerCase() == "t" || val=="1"){
                     val= true
                 }
@@ -456,7 +482,7 @@ var checkAndUpdateValueByLustInfo= function(value,lustInfo,lastData){
                     val= false
                 }
                 break;
-            case 'Null':
+            case 'null':
                 val = null
                 break
             }   
@@ -475,7 +501,7 @@ var checkAndUpdateValueByLustInfo= function(value,lustInfo,lastData){
     }
      // check function
     //"check" : function(lustInfo,data,type){ return {isPass : true , message : "" }},
-    if(lustInfo.check && util.isFunction(lustInfo.check)){
+    if(lustInfo.check && util.Type.isFunction(lustInfo.check)){
         var result = lustInfo.check(lustInfo,val,type);
         if(result){
             if(util.Type.isBoolean(result) && !result)
@@ -529,7 +555,7 @@ var checkAndUpdateValueByLustInfo= function(value,lustInfo,lastData){
 }
 
 var atuoCheckAndUpdateValueByLustInfo = function(value,lustInfo){
-    var val = value || lustInfo.defaut
+    var val = value || lustInfo.default
     // type priority 1.(String)value 2. lustInfo.type 3. guess
     var type = lustInfo.type
     if(util.startWith(val,"(") && val.indexOf(")"))
@@ -547,12 +573,15 @@ var atuoCheckAndUpdateValueByLustInfo = function(value,lustInfo){
                 break
             case 'number':
             case 'num':
+            case 'nu':
+            case 'no':
             case 'n':
                 type ="Number";
                 break
             case 'b':
             case 'boolean':
             case 'bool':
+            case 'bln':
                 type ="Boolean"
                 break;
             case 'null':
@@ -579,6 +608,8 @@ var atuoCheckAndUpdateValueByLustInfo = function(value,lustInfo){
                 break
             case 'number':
             case 'num':
+            case 'nu':
+            case 'no':
             case 'n':
                 if(isNaN(val))
                 {
@@ -589,6 +620,7 @@ var atuoCheckAndUpdateValueByLustInfo = function(value,lustInfo){
             case 'boolean':
             case 'b':
             case 'bool':
+            case 'bln':
                 if(val.toLowerCase() == "true" || val.toLowerCase() == "t" || val=="1"){
                     val= true
                 }

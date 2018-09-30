@@ -82,12 +82,12 @@ var uiGetJson =function(json){
         throw Error("uicli: one more uicli runed @ same time")
     }
     //deep copy json
-    var tgtJson = JSON.parse(JSON.stringify(json))
+    var tgtJson = Object.assign({}, json); // JSON.parse(JSON.stringify(json))
     return new Promise(function(r,j){
         /*
         { isKey: false,
   type: 'String',
-  defaut: null,
+  default: null,
   remark: '',
   isArray: true,
   object: [ '???(string)', { love: '???(s)', like: [Object] } ],
@@ -97,8 +97,8 @@ var uiGetJson =function(json){
         */
         function cylceAllLust(){
             var firstLustInfo = lust.findLustFromJson(tgtJson)
-            lust.renderSelect(firstLustInfo)
             if(firstLustInfo){
+                lust.renderSelect(firstLustInfo)
                 satifyOneLust(firstLustInfo).then(cylceAllLust)
             }
             else{
