@@ -99,20 +99,45 @@ var findLustFromJson = function(json,dotTree,fJson,fKey){
                     return r
                 }
             }
-            if(util.Type.isObject(arrayOne) || util.Type.isArray(arrayOne)){
+            if(util.Type.isObject(arrayOne)){
+                //if is lust， return lust
+                if(arrayOne.isLust){
+                    r = arrayOne
+                    r.isArray =true
+                    r.object = json
+                    r.index = i
+                    r.dotTree = dotTree ? (dotTree + "["+ i + "]") : ('[' + i +']'),
+                    r.fJson = fJson
+                    r.fKey = fKey
+                    return r
+                }
+                    
                 var r = findLustFromJson(arrayOne,(dotTree ? (dotTree + "["+ i + "]") : ('[' + i +']')),json,i)
                 if(r!= null)
                     return r
-            }      
+            }
+            if(util.Type.isArray(arrayOne)){
+                var r = findLustFromJson(arrayOne,(dotTree ? (dotTree + "["+ i + "]") : ('[' + i +']')),json,i)
+                if(r!= null)
+                    return r
+            }
         }
     }
     else if( util.Type.isObject(json)){
         //util.type.isArray(json)
         for( var key in json )
         {
+            // name: '???(string)[rue]这里填写你的名字'
+            var value = json[key]
             // '???': null
             if(key === "???")
             {
+                if(value && value.isLust && value.isKey){
+                    var r = value
+                    r.object = json
+                    r.dotTree =  (dotTree ? (dotTree + ".???") : "???")
+                    return r;
+                }
                 return {
                     isKey : true,
                     object : json,
@@ -122,8 +147,6 @@ var findLustFromJson = function(json,dotTree,fJson,fKey){
                     remark : null
                 }
             }
-            // name: '???(string)[rue]这里填写你的名字'
-            var value = json[key]
             // is String
             if(util.Type.isString(value)){
                 if(util.startWith(value,"???"))
@@ -137,7 +160,22 @@ var findLustFromJson = function(json,dotTree,fJson,fKey){
                 }
             }
             // is Array
-            else if(util.Type.isArray(value) || util.Type.isObject(value)){
+            else if(util.Type.isArray(value)){
+                var r = findLustFromJson(value,( dotTree ? (dotTree + "." + key) : key),json,key)
+                if(r!= null)
+                    return r
+            }
+            else if(util.Type.isObject(value)){
+                if(value.isLust)
+                {
+                    var r = value
+                    //r.isKey
+                    r.isArray = false
+                    r.object = json
+                    r.key = key
+                    r.dotTree = dotTree ? (dotTree + "." + key) : key
+                    return r
+                }
                 var r = findLustFromJson(value,( dotTree ? (dotTree + "." + key) : key),json,key)
                 if(r!= null)
                     return r
@@ -172,7 +210,20 @@ var getPromptFromLustInfo= function(lustInfo,lastData){
   key: 'name',
   dotTree: 'name' }
     */
-    return "pliz input " + lustInfo.dotTree + (lustInfo.type ? (" :"+lustInfo.type) : "")
+    var info =""
+    //function(lustInfo,lastData){}
+    if(lustInfo.prompt && util.Type.isFunction(lustInfo.prompt)){
+        info = lustInfo.prompt(lustInfo,lastData)
+        if(info && util.Type.isString(info)){
+            if(!util.endWith("\r\n")){
+                info += "\r\n"
+            }
+        }
+        else{
+            info =""
+        }
+    }
+    return info +"pliz input " + lustInfo.dotTree + (lustInfo.type ? (" :"+lustInfo.type) : "")
         +(lustInfo.remark ? (" " + lustInfo.remark) : "") + "\r\n" + lustInfo.dotTree + " : " 
         +(lustInfo.defaut ? ("("+lustInfo.defaut+") "):"");
     //pliz input name: string 这里填写你的名字
@@ -344,8 +395,9 @@ var atuoCheckAndUpdateValueByLustInfo = function(value,lustInfo){
     }
     if(type)
     {
-        switch(type){
-            case 'JSON':
+        switch(type.toLowerCase()){
+            case 'json':
+            case 'j':
                 try{
                     val = JSON.parse(val)
                 }
@@ -353,14 +405,18 @@ var atuoCheckAndUpdateValueByLustInfo = function(value,lustInfo){
                     val = null
                 }
                 break
-            case 'Number':
+            case 'number':
+            case 'num':
+            case 'n':
                 if(isNaN(val))
                 {
                     val= null
                 }
                 val = parseFloat(val)
                 break
-            case 'Boolean':
+            case 'boolean':
+            case 'b':
+            case 'bool':
                 if(val.toLowerCase() == "true" || val.toLowerCase() == "t" || val=="1"){
                     val= true
                 }
@@ -369,7 +425,7 @@ var atuoCheckAndUpdateValueByLustInfo = function(value,lustInfo){
                     val= false
                 }
                 break;
-            case 'Null':
+            case 'null':
                 val = null
                 break
             }   
