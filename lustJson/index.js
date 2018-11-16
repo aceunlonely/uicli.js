@@ -293,14 +293,14 @@ var get = function(lustJson,sxg,options){
                 }
             }
         }
-        //是否串行 is Serial
+        //是否串行 is Serial 默认并行
         if(options.serial){
             options =Object.assign({}, options)
             options.findOne = true
             cylceAllLustSerial(options)
         }
         else{
-            //并行lust
+            //并行lust todo
         }
     });
 }

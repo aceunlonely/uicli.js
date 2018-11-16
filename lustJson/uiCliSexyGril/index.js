@@ -1,4 +1,5 @@
 const util = require('./util')
+const stdin = require('stdin.js')
 
 //只能同时调用一次
 global.uicliRunCount=0
