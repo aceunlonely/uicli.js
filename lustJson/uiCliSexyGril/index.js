@@ -113,3 +113,101 @@ exports.getLustForKV = (k,v,options) => {
     }
     return null;
 }
+
+
+exports.beforeSatifyOneLust = (lustInfo,options)=>{
+    // "selectKeys" : [],     abbc,sfdf
+    // "selectValues" : [],  asd,asdf
+    if(lustInfo.selectKeys){
+        if( util.Type.isString(lustInfo.selectKeys)){
+            lustInfo.selectKeys= lustInfo.selectKeys.split(",")
+        }
+        if( util.Type.isString(lustInfo.selectValues)){
+            lustInfo.selectValues= lustInfo.selectValues.split(",")
+        }
+        if(util.Type.isArray(lustInfo.selectKeys) && lustInfo.selectKeys.length >0 ){
+            //"getRightValue" : function(input,lustInfo,type){ return input + "_real"},
+            if(config.verbose && lustInfo.getRightValue){
+                console.log("uicli: lustInfo.getRightValue is override because of selectKeys :" + lustInfo.dotTree)
+            }
+            lustInfo.getRightValue = function(input,lustInfo,type){
+                if(!isNaN(input)){
+                    var i = parseInt(input) -1
+                    if(i>=0 && i< lustInfo.selectKeys.length)
+                    {
+                        return lustInfo.selectKeys[i]
+                    }
+                }
+                var index = lustInfo.selectKeys.indexOf(input)
+                if(index >-1)
+                    return lustInfo.selectKeys[index]
+                if(lustInfo.selectValues){
+                    index=lustInfo.selectValues.indexOf(input)
+                    if(index >-1 && index< lustInfo.selectKeys.length)
+                    {
+                        return lustInfo.selectKeys[index]
+                    }
+                }
+                return null;
+            }
+            if(config.verbose && lustInfo.prompt){
+                console.log("uicli: lustInfo.prompt is override because of selectKeys :" + lustInfo.dotTree)
+            }
+            //prompt
+            //"prompt" : function(lustInfo,lastData){},
+            lustInfo.prompt = function(lustInfo,lastData){
+                if(!lustInfo.selectKeys)   return ""
+                var p = "";
+                for(var i =0;i<lustInfo.selectKeys.length;i++)
+                {
+                    var v = lustInfo.selectKeys[i]
+                    if(lustInfo.selectValues && i < lustInfo.selectValues.length){
+                        v= lustInfo.selectValues[i]
+                    }
+                    p += "["+(i+1)+"] " + v + " "
+                }
+                if(p.length>0)
+                    return p +"\r\n";
+                return p;
+            }
+            //check
+            //function(lustInfo,data,type){ return {isPass : true ,isUpdate : false, message : "" }},
+            if(config.verbose && lustInfo.check){
+                console.log("uicli: lustInfo.check is override because of selectKeys :" + lustInfo.dotTree)
+            }
+            lustInfo.check =function(lustInfo,data,type){ 
+                if(!data)
+                    return {isPass : false, message :" pliz select one value"}
+                if(lustInfo.selectKeys.indexOf(data)>-1)
+                    return {isPass : true ,isUpdate : false, message : "" }
+                return {isPass : false, message :" pliz select a right value"}
+            }
+        }
+    }
+}
+
+exports.afterSatifyOneLust = (lustInfo,options) =>{}
+
+exports.afterSatifyAllLust = (lustJson,options) =>{
+    //结束逻辑
+    stdin.writeLine("======================================================================\r\n")
+    console.log(lustJson)
+    stdin.writeLine("remake the json ?\r\nyes/no:(no) ")
+    return new Promise((r,j) =>{
+        stdin.readLine().then(data2=>{ 
+            if(data2 == "true" || data2 == "yes" || data2 == "y" || data2=="Y"|| data2 == "t"){
+                r({
+                    isRemakeLustJson : true
+                })
+            }
+            else
+            {
+                r({
+                    isRemakeLustJson : false
+                })
+            }
+        })
+
+    })
+    
+}
