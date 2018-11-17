@@ -1,4 +1,4 @@
-const util = require('./uitl')
+const util = require('./util')
 
 /*
 lust.LJ.isArray: 是否是数组对象一员
@@ -215,7 +215,7 @@ var get = function(lustJson,sxg,options){
         sxg.prelude(options)
     }
     //deep copy json
-    var iJson = Object.assign({}, json)
+    var iJson = Object.assign({}, lustJson)
     return new Promise(function(r,j){
 
         //serial

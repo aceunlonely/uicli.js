@@ -1,10 +1,12 @@
 const util = require('./util')
 const stdin = require('stdin.js')
 
+require('../../config')
+
+const config = require('peeriocjs').module("uicli").invoke("config").sync.config()
+
 //只能同时调用一次
 global.uicliRunCount=0
-
-
 
 
 exports.prelude = function(options){
@@ -92,7 +94,6 @@ exports.getLustForString = function(str,options){
         remark : anno 
     }
 }
-
 
 exports.isLustForObject = (obj,options) =>{
     return obj.isLust

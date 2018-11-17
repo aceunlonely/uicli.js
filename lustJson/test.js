@@ -41,4 +41,4 @@ var selectjson= {
 var sxg = require('./uiCliSexyGril')
 
 // console.log(LJ.get(selectjson,sxg,{}))
-LJ.get(selectjson,sxg,{}).log(data=>{console.log(data)})
+LJ.get(selectjson,sxg,{serial : true}).then(data=>{console.log(data)})
