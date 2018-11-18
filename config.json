@@ -1,4 +1,5 @@
 {
     "verbose" : false,
-    "lang" : "en"
+    "lang" : "en",
+    "version" : "1.x"
 }
