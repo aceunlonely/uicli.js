@@ -6,6 +6,11 @@ now master is not stable,
 is change to lustjson,
 who wants use uicli.js ， please use npm version or version 1.x
 
+## todos
+替换index.js实现，采用sexyGril模式
+添加test
+添加新的lustJson文件夹，稳定之后采用npm方式
+
 
 ## install
 * npm i uicli.js -g
