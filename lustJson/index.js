@@ -156,11 +156,15 @@ var getLusts = function(json,dotTree,fJson,fKey,sxg,options){
  * satify one lust
  * @param {*} lustInfo 
  */
-var satifyOneLust = function(lustInfo,options){
+var satifyOneLust = function(lustInfo,sxg,options){
     return new Promise(function(r,j){
-        var cycle = function(lastData){
-            stdin.writeLine(lust.getPromptFromLustInfo(lustInfo,lastData))
-            return stdin.readLine().then(data=>{
+        const cycle = function(lastData){
+            if(!sxg.getInputOneLustValue){
+                throw new Error("lustJson: your sxg must implement the exports methods: getInputOneLustValue")
+            }
+            var dataOrPromise = sxg.getInputOneLustValue(lustInfo,lastData,options)
+            //inputHandler
+            const inputHandler = data=>{
                 var cr =lust.checkAndUpdateValueByLustInfo(data,lustInfo,lastData)
                 if(cr.isPass)
                 {
@@ -196,9 +200,18 @@ var satifyOneLust = function(lustInfo,options){
                     stdin.writeLine(cr.message + "\r\n")
                     cycle(data)
                 }
-            })
+            }
+            if(dataOrPromise.then){
+                dataOrPromise.then(data=>{
+                    inputHandler(data)
+                })
+            }
+            else
+            {
+                inputHandler(dataOrPromise)
+            }
         }
-
+        //start main logic
         cycle()
     })
 }
@@ -228,7 +241,7 @@ var get = function(lustJson,sxg,options){
                     //判断是否是promise
                     if(pOrNot && pOrNot.then){
                         pOrNot.then(data =>{
-                            satifyOneLust(firstLustInfo,options).then(()=>{
+                            satifyOneLust(firstLustInfo,sxg,options).then(()=>{
                                 if(sxg.afterSatifyOneLust){
                                     sxg.afterSatifyOneLust(firstLustInfo,options)
                                 }
@@ -237,7 +250,7 @@ var get = function(lustJson,sxg,options){
                         })
                     }
                     else{
-                        satifyOneLust(firstLustInfo,options).then(()=>{
+                        satifyOneLust(firstLustInfo,sxg,options).then(()=>{
                             if(sxg.afterSatifyOneLust){
                                 sxg.afterSatifyOneLust(firstLustInfo,options)
                             }
@@ -247,7 +260,7 @@ var get = function(lustJson,sxg,options){
                 }
                 else
                 {
-                    satifyOneLust(firstLustInfo,options).then(()=>{
+                    satifyOneLust(firstLustInfo,sxg,options).then(()=>{
                         if(sxg.afterSatifyOneLust){
                             sxg.afterSatifyOneLust(firstLustInfo,options)
                         }

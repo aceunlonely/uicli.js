@@ -1,5 +1,6 @@
 const util = require('./util')
 const stdin = require('stdin.js')
+const lust = require('./lusts')
 
 require('../../config')
 
@@ -212,4 +213,13 @@ exports.afterSatifyAllLust = (lustJson,options) =>{
 
     })
     
+}
+
+exports.getInputOneLustValue = (lustInfo,lastData,options) =>{
+    stdin.writeLine(lust.getPromptFromLustInfo(lustInfo,lastData))
+    return stdin.readLine()
+}
+
+exports.validateOneLustInfo = (value,lustInfo,lastData) =>{
+
 }
