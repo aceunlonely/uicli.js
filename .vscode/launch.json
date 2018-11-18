@@ -8,7 +8,7 @@
             "type": "node",
             "request": "launch",
             "name": "Launch Program",
-            "program": "${workspaceFolder}\\test\\testLust\\test7.js"
+            "program": "${workspaceFolder}\\lustJson\\test.js"
         }
     ]
 }

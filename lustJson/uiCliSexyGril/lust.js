@@ -38,8 +38,8 @@ var getPromptFromLustInfo= function(lustInfo,lastData){
             info =""
         }
     }
-    return  "pliz input " + lustInfo.dotTree + (lustInfo.type ? (" :"+lustInfo.type) : "")
-        +(lustInfo.remark ? (" " + lustInfo.remark) : "") +  (lustInfo.regExp ? " " + lustInfo.regExp : "") + "\r\n" + info + lustInfo.dotTree + " : " 
+    return  "pliz input " + lustInfo.LJ.dotTree + (lustInfo.type ? (" :"+lustInfo.type) : "")
+        +(lustInfo.remark ? (" " + lustInfo.remark) : "") +  (lustInfo.regExp ? " " + lustInfo.regExp : "") + "\r\n" + info + lustInfo.LJ.dotTree + " : " 
         +(lustInfo.default ? ("("+lustInfo.default+") "):"");
     //pliz input name: string 这里填写你的名字  /acv/g
     //name : (rue)

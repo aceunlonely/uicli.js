@@ -88,7 +88,7 @@ var getLusts = function(json,dotTree,fJson,fKey,sxg,options){
             // '???': null
             if(sxg.isLustForKV && sxg.isLustForKV(key,value,options))
             {
-                var r = getLustForKV(key,value,options)
+                var r = sxg.getLustForKV(key,value,options)
                 if(!r) r = {}
                 r.LJ = r.LJ || {}
                 r.LJ.isKey = true
@@ -99,9 +99,9 @@ var getLusts = function(json,dotTree,fJson,fKey,sxg,options){
             }
             // is String
             else if(util.Type.isString(value)){
-                if(sxg.isLustForString && sxg.getLustForString && sxg.isLustForString(arrayOne,options))
+                if(sxg.isLustForString && sxg.getLustForString && sxg.isLustForString(value,options))
                 {
-                    var r = sxg.getLustForString(arrayOne,options)
+                    var r = sxg.getLustForString(value,options)
                     r.LJ = r.LJ || {}
                     r.LJ.isKey =false
                     r.LJ.isArray =false
@@ -110,7 +110,7 @@ var getLusts = function(json,dotTree,fJson,fKey,sxg,options){
                     r.LJ.dotTree = dotTree ? (dotTree + "." + key) : key
                     r.LJ.fJson = fJson
                     r.LJ.fKey = fKey
-                    r.LJ.key = null
+                    r.LJ.key = key
                     lustArray.push(r)
                 }
             }
@@ -153,6 +153,35 @@ var getLusts = function(json,dotTree,fJson,fKey,sxg,options){
 }
 
 /**
+ * 填充lustInfo
+ * @param {*} cr 
+ */
+var fillOneLustInfo = function(cr,lustInfo){
+    if(lustInfo.LJ.isKey){
+        lustInfo.LJ.object[cr.key] = cr.value
+    }
+    else{
+        if(lustInfo.LJ.isArray){
+            lustInfo.LJ.object.splice(lustInfo.LJ.index,0 , cr.value)
+        }
+        else{
+            lustInfo.LJ.object[lustInfo.LJ.key] = cr.value
+        }
+    }
+
+    if(!cr.isKeepLust){
+        //console.log(lustInfo)
+        if(lustInfo.LJ.isArray){
+            //lustInfo.fJson[lustInfo.fkey] = 
+            lustInfo.LJ.object.splice(lustInfo.LJ.index+1,1) 
+        }
+        else if(lustInfo.LJ.isKey){
+            delete lustInfo.LJ.object[lustInfo.LJ.key]
+        }
+    }
+}
+
+/**
  * satify one lust
  * @param {*} lustInfo 
  */
@@ -173,41 +202,47 @@ var satifyOneLust = function(lustInfo,sxg,options){
                     /* 
                         isPass
                         isKeepLust
+                        value
+                        key
                     */
-                    if(cr.isPass)
-                    {
-                        if(!cr.isUpdate){
-                            stdin.writeLine("add success:" + lustInfo.dotTree + " continue to add?\r\nyes/no:(no) ")         
-                            stdin.readLine().then(data1=>{ 
-                                if(data1 == "true" || data1 == "yes" || data1 == "y" || data1=="Y"
-                                    || data1 == "t"){
-                                    // if continue ,will keep ???
-                                    r()
-                                }
-                                else{
-                                    //console.log(lustInfo)
-                                    if(lustInfo.isArray){
-                                        //lustInfo.fJson[lustInfo.fkey] = 
-                                        lustInfo.object.splice(lustInfo.index+1,1) 
-                                    }
-                                    else if(lustInfo.isKey){
-                                        delete lustInfo.object[lustInfo.key]
-                                    }
-                                    r()
-                                }
-                            })
+                   if(cr.isPass){
+                        fillOneLustInfo(cr,lustInfo)
+                        r()
+                   }
+                   else{
+                    //stdin.writeLine(cr.message + "\r\n")
+                    cycle(data)
+                   }
+
+                    // if(cr.isPass)
+                    // {
+                    //     if(!cr.isUpdate){
+                    //         stdin.writeLine("add success:" + lustInfo.dotTree + " continue to add?\r\nyes/no:(no) ")         
+                    //         stdin.readLine().then(data1=>{ 
+                    //             if(data1 == "true" || data1 == "yes" || data1 == "y" || data1=="Y"
+                    //                 || data1 == "t"){
+                    //                 // if continue ,will keep ???
+                    //                 r()
+                    //             }
+                    //             else{
+                    //                 //console.log(lustInfo)
+                    //                 if(lustInfo.isArray){
+                    //                     //lustInfo.fJson[lustInfo.fkey] = 
+                    //                     lustInfo.object.splice(lustInfo.index+1,1) 
+                    //                 }
+                    //                 else if(lustInfo.isKey){
+                    //                     delete lustInfo.object[lustInfo.key]
+                    //                 }
+                    //                 r()
+                    //             }
+                    //         })
                             
-                        }
-                        else
-                        {
-                            r()
-                        }
-                    }
-                    else
-                    {
-                        stdin.writeLine(cr.message + "\r\n")
-                        cycle(data)
-                    }
+                    //     }
+                    //     else
+                    //     {
+                    //         r()
+                    //     }
+                    // }
                 }
                 var vResultOrPromise = sxg.validateOneLustInfo(data,lustInfo,lastData,options)
                 if(vResultOrPromise.then){
@@ -220,7 +255,7 @@ var satifyOneLust = function(lustInfo,sxg,options){
                     validateHandler(vResultOrPromise)
                 }
 
-                var cr =lust.checkAndUpdateValueByLustInfo(data,lustInfo,lastData)
+                //var cr =lust.checkAndUpdateValueByLustInfo(data,lustInfo,lastData)
                 
             }
             if(dataOrPromise.then){
@@ -340,6 +375,15 @@ var get = function(lustJson,sxg,options){
     });
 }
 
+
+// exports.checkSxg = (sxg,isCheckAll) =>{
+//     if(!sxg.prelude && isCheckAll){
+//         throw new Error("sxg should implement prelude")
+//     }
+//     if(!sxg.prelude && isCheckAll){
+//         throw new Error("sxg should implement prelude")
+//     }
+// }
 
 exports.get= get //function(lustJson,resolver,resolverConf){console.log("get")}
 
