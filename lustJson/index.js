@@ -162,44 +162,66 @@ var satifyOneLust = function(lustInfo,sxg,options){
             if(!sxg.getInputOneLustValue){
                 throw new Error("lustJson: your sxg must implement the exports methods: getInputOneLustValue")
             }
+            if(!sxg.validateOneLustInfo){
+                throw new Error("lustJson: your sxg must implement the exports methods: validateOneLustInfo")
+            }
             var dataOrPromise = sxg.getInputOneLustValue(lustInfo,lastData,options)
             //inputHandler
             const inputHandler = data=>{
-                var cr =lust.checkAndUpdateValueByLustInfo(data,lustInfo,lastData)
-                if(cr.isPass)
-                {
-                    if(!cr.isUpdate){
-                        stdin.writeLine("add success:" + lustInfo.dotTree + " continue to add?\r\nyes/no:(no) ")         
-                        stdin.readLine().then(data1=>{ 
-                            if(data1 == "true" || data1 == "yes" || data1 == "y" || data1=="Y"
-                                || data1 == "t"){
-                                // if continue ,will keep ???
-                                r()
-                            }
-                            else{
-                                //console.log(lustInfo)
-                                if(lustInfo.isArray){
-                                    //lustInfo.fJson[lustInfo.fkey] = 
-                                    lustInfo.object.splice(lustInfo.index+1,1) 
+                const validateHandler = cr =>{
+                    //cr like:
+                    /* 
+                        isPass
+                        isKeepLust
+                    */
+                    if(cr.isPass)
+                    {
+                        if(!cr.isUpdate){
+                            stdin.writeLine("add success:" + lustInfo.dotTree + " continue to add?\r\nyes/no:(no) ")         
+                            stdin.readLine().then(data1=>{ 
+                                if(data1 == "true" || data1 == "yes" || data1 == "y" || data1=="Y"
+                                    || data1 == "t"){
+                                    // if continue ,will keep ???
+                                    r()
                                 }
-                                else if(lustInfo.isKey){
-                                    delete lustInfo.object[lustInfo.key]
+                                else{
+                                    //console.log(lustInfo)
+                                    if(lustInfo.isArray){
+                                        //lustInfo.fJson[lustInfo.fkey] = 
+                                        lustInfo.object.splice(lustInfo.index+1,1) 
+                                    }
+                                    else if(lustInfo.isKey){
+                                        delete lustInfo.object[lustInfo.key]
+                                    }
+                                    r()
                                 }
-                                r()
-                            }
-                        })
-                        
+                            })
+                            
+                        }
+                        else
+                        {
+                            r()
+                        }
                     }
                     else
                     {
-                        r()
+                        stdin.writeLine(cr.message + "\r\n")
+                        cycle(data)
                     }
+                }
+                var vResultOrPromise = sxg.validateOneLustInfo(data,lustInfo,lastData,options)
+                if(vResultOrPromise.then){
+                    vResultOrPromise.then(vResult =>{
+                        validateHandler(vResult)
+                    })
                 }
                 else
                 {
-                    stdin.writeLine(cr.message + "\r\n")
-                    cycle(data)
+                    validateHandler(vResultOrPromise)
                 }
+
+                var cr =lust.checkAndUpdateValueByLustInfo(data,lustInfo,lastData)
+                
             }
             if(dataOrPromise.then){
                 dataOrPromise.then(data=>{

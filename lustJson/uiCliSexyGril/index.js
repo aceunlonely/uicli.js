@@ -220,6 +220,6 @@ exports.getInputOneLustValue = (lustInfo,lastData,options) =>{
     return stdin.readLine()
 }
 
-exports.validateOneLustInfo = (value,lustInfo,lastData) =>{
+exports.validateOneLustInfo = (value,lustInfo,lastData,options) =>{
 
 }
