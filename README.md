@@ -1,6 +1,12 @@
 # uicli.js
 uicli tool for json....,implement for node
 
+## key info
+now master is not stable,
+is change to lustjson,
+who wants use uicli.js ， please use npm version or version 1.x
+
+
 ## install
 * npm i uicli.js -g
 
@@ -62,4 +68,5 @@ uicli.uiGetJson(json).then(data =>{
     set env: uicli_lang = cn
 
     or lang @ config.json 
+
 
