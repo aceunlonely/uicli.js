@@ -1,3 +1,5 @@
+console.log(' here is  out of time , ignore it')
+
 var lust = require('../../lust')
 var uicli = require('../../index')
 

@@ -6,11 +6,6 @@ now master is not stable,
 is change to lustjson,
 who wants use uicli.js ， please use npm version or version 1.x
 
-## todos
-替换index.js实现，采用sexyGril模式
-添加test
-添加新的lustJson文件夹，稳定之后采用npm方式
-
 
 ## install
 * npm i uicli.js -g
@@ -59,12 +54,15 @@ var json= {
     "???": null,
     "json3": "???"
 }
-
-uicli.uiGetJson(json).then(data =>{
+var options = {isAskRemakeJson : false}
+uicli.uiGetJson(json,options).then(data =>{
     console.log("hello good day")
 })
 
 ```
+
+## options
+    isAskRemakeJson : if true will ask you remake json after all lust satisfied , default is false
 
 ## switch info lang
     //todo

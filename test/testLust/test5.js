@@ -27,6 +27,6 @@ var json = {
     "age" : "???"
 }
 
-uicli.uiGetJson(json).then(data =>{
-    console.log("hello good day")
+uicli.uiGetJson(json, {isAskRemakeJson : true}).then(data =>{
+    console.log("hello good day :" + JSON.stringify(data))
 })

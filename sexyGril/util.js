@@ -33,3 +33,12 @@ var startWith=function(str,s){
 exports.Type = Type
 exports.endWith =endWith
 exports.startWith = startWith
+
+
+// exports.indexOf = (arr,one) =>{
+//    for(var i = 0;i<arr.length;i++){
+//       if(arr[i] == one)
+//          return i
+//    }
+//    return -1
+// }

@@ -1,3 +1,5 @@
+console.log(' here is  out of time , ignore it')
+
 var lust = require('../../lust')
 
 var text = "???(string)[rue]这里填写你的名字" 

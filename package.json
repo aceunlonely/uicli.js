@@ -1,6 +1,6 @@
 {
   "name": "uicli.js",
-  "version": "1.0.0",
+  "version": "2.0.0",
   "description": "ui cli",
   "main": "index.js",
   "directories": {
@@ -23,8 +23,9 @@
   },
   "homepage": "https://github.com/aceunlonely/uicli.js#readme",
   "dependencies": {
+    "lustjson.js": "^1.0.1",
     "peeriocjs": "^2.4.1",
-    "stdin.js": "^1.1.0"
+    "stdin.js": "^1.1.1"
   },
   "bin": {
     "uicli": "./bin/uicli"

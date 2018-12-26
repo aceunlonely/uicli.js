@@ -1,3 +1,4 @@
+console.log(' here is  out of time , ignore it')
 var uicli = require('../../')
 
 var json= {

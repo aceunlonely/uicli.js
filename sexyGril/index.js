@@ -138,16 +138,20 @@ exports.beforeSatifyOneLust = (lustInfo,options)=>{
                     var i = parseInt(input) -1
                     if(i>=0 && i< lustInfo.selectKeys.length)
                     {
+                        //console.log("debug:" + lustInfo.selectKeys[i])
                         return lustInfo.selectKeys[i]
                     }
                 }
                 var index = lustInfo.selectKeys.indexOf(input)
-                if(index >-1)
+                if(index >-1){
+                    //console.log("debug:" + lustInfo.selectKeys[index])
                     return lustInfo.selectKeys[index]
+                }
                 if(lustInfo.selectValues){
                     index=lustInfo.selectValues.indexOf(input)
                     if(index >-1 && index< lustInfo.selectKeys.length)
                     {
+                        //console.log("debug:" + lustInfo.selectKeys[index])
                         return lustInfo.selectKeys[index]
                     }
                 }
@@ -178,11 +182,14 @@ exports.beforeSatifyOneLust = (lustInfo,options)=>{
             if(config.verbose && lustInfo.check){
                 console.log("uicli: lustInfo.check is override because of selectKeys :" + lustInfo.dotTree)
             }
-            lustInfo.check =function(lustInfo,data,type){ 
-                if(!data)
+            lustInfo.check =function(lustInfo,data,type,rawVal){ 
+                if(!rawVal)
                     return {isPass : false, message :" pliz select one value"}
-                if(lustInfo.selectKeys.indexOf(data)>-1)
+                if(lustInfo.selectKeys.indexOf(rawVal)>-1){
                     return {isPass : true ,isUpdate : false, message : "" }
+                }
+                //console.log(typeof(data))
+                //console.log("debug:" + data + "   " + lustInfo.selectKeys)
                 return {isPass : false, message :" pliz select a right value"}
             }
         }
@@ -195,23 +202,30 @@ exports.afterSatifyAllLust = (lustJson,options) =>{
     //结束逻辑
     stdin.writeLine("======================================================================\r\n")
     console.log(lustJson)
-    stdin.writeLine("remake the json ?\r\nyes/no:(no) ")
-    return new Promise((r,j) =>{
-        stdin.readLine().then(data2=>{ 
-            if(data2 == "true" || data2 == "yes" || data2 == "y" || data2=="Y"|| data2 == "t"){
-                r({
-                    isRemakeLustJson : true
-                })
-            }
-            else
-            {
-                r({
-                    isRemakeLustJson : false
-                })
-            }
-        })
 
-    })
+    if(options.isAskRemakeJson){
+        stdin.writeLine("remake the json ?\r\nyes/no:(no) ")
+        return new Promise((r,j) =>{
+            stdin.readLine().then(data2=>{ 
+                if(data2 == "true" || data2 == "yes" || data2 == "y" || data2=="Y"|| data2 == "t"){
+                    r({
+                        isRemakeLustJson : true
+                    })
+                }
+                else
+                {
+                    r({
+                        isRemakeLustJson : false
+                    })
+                }
+            })
+
+        })
+    }else{
+        return {
+            isRemakeLustJson : false
+        }
+    }
     
 }
 
@@ -354,12 +368,14 @@ exports.validateOneLustInfo = (value,lustInfo,lastData,options) =>{
         return new Promise(askContinue)     
     }
     //console.log(type)
+    var rawVal = val
     if(type)
     {
         switch(type.toLowerCase()){
             case 'j':
             case 'json':
                 try{
+                    //console.log(val)
                     val = JSON.parse(val)
                 }
                 catch(ex){
@@ -415,7 +431,7 @@ exports.validateOneLustInfo = (value,lustInfo,lastData,options) =>{
      // check function
     //"check" : function(lustInfo,data,type){ return {isPass : true , message : "" }},
     if(lustInfo.check && util.Type.isFunction(lustInfo.check)){
-        var result = lustInfo.check(lustInfo,val,type);
+        var result = lustInfo.check(lustInfo,val,type,rawVal);
         if(result){
             if(util.Type.isBoolean(result) && !result)
             {
