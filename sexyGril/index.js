@@ -215,6 +215,8 @@ exports.afterSatifyAllLust = (lustJson,options) =>{
                 }
                 else
                 {
+                    //set 0
+                    global.uicliRunCount =0
                     r({
                         isRemakeLustJson : false
                     })
@@ -223,6 +225,8 @@ exports.afterSatifyAllLust = (lustJson,options) =>{
 
         })
     }else{
+         //set 0
+         global.uicliRunCount =0
         return {
             isRemakeLustJson : false
         }
