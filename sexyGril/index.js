@@ -1,7 +1,6 @@
 const util = require('./util')
 const stdin = require('stdin.js')
 const lust = require('./lust')
-
 require('../config')
 
 const config = require('peeriocjs').module("uicli").invoke("config").sync.config()
@@ -200,8 +199,10 @@ exports.afterSatifyOneLust = (lustInfo,options) =>{}
 
 exports.afterSatifyAllLust = (lustJson,options) =>{
     //结束逻辑
-    stdin.writeLine("======================================================================\r\n")
-    console.log(lustJson)
+    if(options.verbose){
+        stdin.writeLine("======================================================================\r\n")
+        console.log(lustJson)
+    }
 
     if(options.isAskRemakeJson){
         stdin.writeLine("remake the json ?\r\nyes/no:(no) ")
