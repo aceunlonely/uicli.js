@@ -7,7 +7,7 @@ var json= {
     "age" : "???",
     "isMan" : "???是否是男生",
     "hobbies": ["basketball","???"],
-    "lover" : {
+    "friend" : {
         "name" : "LiSA",
         "age" : 32,
         "???" : null,
